@@ -1,0 +1,46 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: trello_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jython
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: trello_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - trello-network
+
+  migrations:
+    build:
+      context: .
+      dockerfile: dockerfile.migrate
+    depends_on:
+      - postgres
+    networks:
+      - trello-network
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - migrations
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: jython
+      DB_PASSWORD: 123
+      DB_NAME: trello_db
+    networks:
+      - trello-network
+
+volumes:
+  postgres_data:
+
+networks:
+  trello-network:
+    driver: bridge

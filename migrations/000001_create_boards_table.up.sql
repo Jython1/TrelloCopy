@@ -1,0 +1,8 @@
+CREATE TABLE boards (
+    id SERIAL PRIMARY KEY,
+    position INT NOT NULL DEFAULT 0,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

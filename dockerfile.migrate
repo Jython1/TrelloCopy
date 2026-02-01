@@ -1,0 +1,6 @@
+# Использовать официальный образ migrate
+FROM migrate/migrate:v4.16.2
+
+COPY migrations /migrations
+
+CMD ["-path", "/migrations", "-database", "postgres://jython:123@postgres:5432/trello_db?sslmode=disable", "up"]
