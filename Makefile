@@ -1,25 +1,30 @@
-.PHONY: test-board test-board-race test-card test-card-race test-column test-column-race
+.PHONY: test-board-mem test-board-race-mem test-card-mem test-card-race-mem test-column-mem test-column-race-mem
+.PHONY: test-board-pg test-board-race-pg test-card-pg test-card-race-pg test-column-pg test-column-race-pg
 .PHONY: docker-build docker-run docker-stop docker-clean docker-logs
 .PHONY: docker-compose-up docker-compose-down docker-compose-logs docker-compose-build
 
-#Testing modeles
-test-board:
-	go test ./internal/repository/board_repository_mem_test.go ./internal/repository/board_repository_mem.go -v
+#Testing In-Memory
+test-board-mem:
+	go test ./internal/repository/in_memory_repository/board_repository_mem_test.go ./internal/repository/in_memory_repository/board_repository_mem.go -v
 
-test-board-race:
-	go test ./internal/repository/board_repository_mem_test.go ./internal/repository/board_repository_mem.go -race -v
+test-board-race-mem:
+	go test ./internal/repository/in_memory_repository/board_repository_mem_test.go ./internal/repository/in_memory_repository/board_repository_mem.go -race -v
 
-test-column:
-	go test ./internal/repository/column_repository_mem_test.go ./internal/repository/column_repository_mem.go -v
+test-column-mem:
+	go test ./internal/repository/in_memory_repository/column_repository_mem_test.go ./internal/repository/in_memory_repository/column_repository_mem.go -v
 
-test-column-race:
-	go test ./internal/repository/column_repository_mem_test.go ./internal/repository/column_repository_mem.go -v -race
+test-column-race-mem:
+	go test ./internal/repository/in_memory_repository/column_repository_mem_test.go ./internal/repository/in_memory_repository/column_repository_mem.go -v -race
 
-test-card:
-	go test ./internal/repository/card_repository_mem_test.go ./internal/repository/card_repository_mem.go -v
+test-card-mem:
+	go test ./internal/repository/in_memory_repository/card_repository_mem_test.go ./internal/repository/in_memory_repository/card_repository_mem.go -v
 
-test-card-race:
-	go test ./internal/repository/card_repository_mem_test.go ./internal/repository/card_repository_mem.go -v -race
+test-card-race-mem:
+	go test ./internal/repository/in_memory_repository/card_repository_mem_test.go ./internal/repository/in_memory_repository/card_repository_mem.go -v -race
+	
+#Testing PostgreSQL
+test-board-pg:
+	go test ./internal/repository/pg_repository/board_repository_pg_test.go ./internal/repository/pg_repository/board_repository_pg.go -v
 
 #Docker commands
 docker-build:
