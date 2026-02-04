@@ -2,6 +2,7 @@
 .PHONY: test-board-pg test-board-race-pg test-card-pg test-card-race-pg test-column-pg test-column-race-pg
 .PHONY: docker-build docker-run docker-stop docker-clean docker-logs
 .PHONY: docker-compose-up docker-compose-down docker-compose-logs docker-compose-build
+.PHONY: clean-hard clean-db
 
 #Testing In-Memory
 test-board-mem:
@@ -70,3 +71,11 @@ docker-compose-logs:
 
 docker-compose-build:
 	docker compose build
+
+#Full clean
+clean-hard:
+	docker compose down -v --rmi all --remove-orphans
+	docker system prune -a --volumes -f
+
+clean-db:
+	docker volume rm trellocopy_postgres_data 2>/dev/null || true

@@ -16,12 +16,13 @@ func NewPGBoardRepository(db *sql.DB) repository.BoardRepository {
 
 func (r *PGBoardRepository) Create(board *entity.Board) error {
 	query := `
-        INSERT INTO boards (title, description, position)
-        VALUES ($1, $2, $3)
+        INSERT INTO boards (user_id, title, description, position)
+        VALUES ($1, $2, $3, $4)
         RETURNING id, created_at, updated_at`
 
 	err := r.db.QueryRow(
 		query,
+		board.UserID,
 		board.Title,
 		board.Description,
 		board.Position,
