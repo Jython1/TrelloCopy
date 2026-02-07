@@ -2,34 +2,40 @@
 .PHONY: test-board-pg test-board-race-pg test-card-pg test-card-race-pg test-column-pg test-column-race-pg
 .PHONY: docker-build docker-run docker-stop docker-clean docker-logs
 .PHONY: docker-compose-up docker-compose-down docker-compose-logs docker-compose-build
-.PHONY: clean-hard clean-db
+.PHONY: clean-hard docker-compose-restart
 
 #Testing In-Memory
 test-board-mem:
-	go test ./internal/repository/in_memory_repository/board_repository_mem_test.go ./internal/repository/in_memory_repository/board_repository_mem.go -v
+	go test ./internal/repository/in_memory_repository/board_repository_mem_test.go \
+	./internal/repository/in_memory_repository/board_repository_mem.go -v
 
 test-board-race-mem:
-	go test ./internal/repository/in_memory_repository/board_repository_mem_test.go ./internal/repository/in_memory_repository/board_repository_mem.go -race -v
+	go test ./internal/repository/in_memory_repository/board_repository_mem_test.go \ 
+	./internal/repository/in_memory_repository/board_repository_mem.go -race -v
 
 test-column-mem:
-	go test ./internal/repository/in_memory_repository/column_repository_mem_test.go ./internal/repository/in_memory_repository/column_repository_mem.go -v
+	go test ./internal/repository/in_memory_repository/column_repository_mem_test.go \
+	./internal/repository/in_memory_repository/column_repository_mem.go -v
 
 test-column-race-mem:
-	go test ./internal/repository/in_memory_repository/column_repository_mem_test.go ./internal/repository/in_memory_repository/column_repository_mem.go -v -race
+	go test ./internal/repository/in_memory_repository/column_repository_mem_test.go \
+	./internal/repository/in_memory_repository/column_repository_mem.go -v -race
 
 test-card-mem:
-	go test ./internal/repository/in_memory_repository/card_repository_mem_test.go ./internal/repository/in_memory_repository/card_repository_mem.go -v
+	go test ./internal/repository/in_memory_repository/card_repository_mem_test.go \
+	./internal/repository/in_memory_repository/card_repository_mem.go -v
 
 test-card-race-mem:
-	go test ./internal/repository/in_memory_repository/card_repository_mem_test.go ./internal/repository/in_memory_repository/card_repository_mem.go -v -race
+	go test ./internal/repository/in_memory_repository/card_repository_mem_test.go \
+	./internal/repository/in_memory_repository/card_repository_mem.go -v -race
 	
 #Testing PostgreSQL
-test-board-pg:
-	go test ./internal/repository/pg_repository/board_repository_pg_test.go ./internal/repository/pg_repository/board_repository_pg.go -v
+test-postgre-crud:
+	go test ./internal/repository/pg_repository/ -v
 
 #Docker commands
 docker-build:
-	docker build -t trellocopy .
+	docker build -t trellocopy . --no-cache
 
 docker-run:
 	docker run -d -p 8080:8080 --name trellocopy-container trellocopy
@@ -64,7 +70,7 @@ docker-compose-up:
 	docker compose up -d
 
 docker-compose-down:
-	docker compose down
+	docker compose down -v
 
 docker-compose-logs:
 	docker compose logs -f
@@ -77,5 +83,4 @@ clean-hard:
 	docker compose down -v --rmi all --remove-orphans
 	docker system prune -a --volumes -f
 
-clean-db:
-	docker volume rm trellocopy_postgres_data 2>/dev/null || true
+docker-compose-restart: clean-hard docker-compose-build docker-compose-up

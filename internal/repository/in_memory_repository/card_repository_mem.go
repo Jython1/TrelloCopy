@@ -56,7 +56,7 @@ func (r *InMemoryCardRepository) Update(card *entity.Card) error {
 		return errors.New("Card doesn't exist")
 	}
 	card.UpdatedAt = time.Now()
-	// ВАЖНО: не сохраняет обновленную карточку в мапу!
+
 	return nil
 }
 

@@ -7,7 +7,6 @@ import (
 
 type Column struct {
 	ID          int            `db:"id" json:"id"`
-	UserID      int            `db:"user_id" json:"user_id"`
 	BoardID     int            `db:"board_id" json:"board_id"`
 	Position    int            `db:"position" json:"position"`
 	Title       string         `db:"title" json:"title"`

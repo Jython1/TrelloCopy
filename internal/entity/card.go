@@ -7,8 +7,7 @@ import (
 
 type Card struct {
 	ID          int            `db:"id" json:"id"`
-	UserID      int            `db:"user_id" json:"user_id"`
-	ColumnID    int            `db:"col_id" json:"col_id"`
+	ColumnID    int            `db:"column_id" json:"column_id"`
 	Position    int            `db:"position" json:"position"`
 	Title       string         `db:"title" json:"title"`
 	Description sql.NullString `db:"description" json:"description"`

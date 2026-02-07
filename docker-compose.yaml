@@ -15,7 +15,6 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - trello-network
-    # ДОБАВЬТЕ ЭТОТ БЛОК healthcheck ↓
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U jython -d trello_db"]
       interval: 5s
@@ -23,33 +22,59 @@ services:
       retries: 10
       start_period: 10s
 
+  redis:
+    image: redis:7-alpine
+    container_name: trello_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - trello-network
+    command: redis-server --appendonly yes
+    healthcheck:  
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   migrations:
     build:
       context: .
       dockerfile: dockerfile.migrate
     depends_on:
       postgres:
-        condition: service_healthy  # ИЗМЕНИТЕ НА ЭТО
+        condition: service_healthy
     networks:
       - trello-network
 
   app:
     build: .
+    container_name: trellocopy-app 
     ports:
       - "8080:8080"
     depends_on:
       - migrations
+      - redis 
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
       DB_USER: jython
       DB_PASSWORD: 123
       DB_NAME: trello_db
+      
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      REDIS_DB: "0"
     networks:
       - trello-network
+    restart: unless-stopped  
 
 volumes:
   postgres_data:
+  redis_data:  
 
 networks:
   trello-network:

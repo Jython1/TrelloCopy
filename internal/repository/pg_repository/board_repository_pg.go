@@ -94,6 +94,26 @@ func (r *PGBoardRepository) GetByID(id int) (*entity.Board, error) {
 	return board, nil
 }
 
-func (r *PGBoardRepository) Update(board entity.Board) {
-	panic("unimplemented")
+func (r *PGBoardRepository) Update(board *entity.Board) error {
+	query := `
+        UPDATE boards 
+        SET 
+            user_id = $1,
+            title = $2,
+            description = $3,
+            position = $4,
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = $5
+        RETURNING updated_at`
+
+	err := r.db.QueryRow(
+		query,
+		board.UserID,
+		board.Title,
+		board.Description,
+		board.Position,
+		board.ID,
+	).Scan(&board.UpdatedAt)
+
+	return err
 }

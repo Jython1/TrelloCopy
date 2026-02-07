@@ -5,6 +5,6 @@ import "trellocopy/internal/entity"
 type CardRepository interface {
 	Create(card *entity.Card) error
 	GetByID(id int) (*entity.Card, error)
-	Update(board *entity.Card)
+	Update(board *entity.Card) error
 	Delete(id int) error
 }
